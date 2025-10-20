@@ -1,7 +1,9 @@
 <?php
-$page_title = "Order Confirmation";
-require_once '../includes/header.php';
+require_once '../includes/config.php';
+require_once '../classes/User.php';
 require_once '../classes/Order.php';
+
+$user = new User();
 
 // Check if user is logged in
 if (!$user->isLoggedIn()) {
@@ -9,104 +11,144 @@ if (!$user->isLoggedIn()) {
     exit;
 }
 
-// Get order ID from URL
-$order_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+// Check if order ID is provided
+$order_id = isset($_GET['order_id']) ? (int)$_GET['order_id'] : (isset($_GET['id']) ? (int)$_GET['id'] : 0);
 
-// Initialize order object
+if (!$order_id) {
+    $_SESSION['error'] = "Invalid order ID provided.";
+    header("Location: " . SITE_URL . "public/index.php");
+    exit;
+}
+
 $orderObj = new Order();
-
-// Get order details
 $order = $orderObj->getById($order_id);
 
-// Check if order exists and belongs to current user
-if (!$order || $order['user_id'] != $user->getId()) {
+// If order not found or doesn't belong to current user
+// Determine current user ID safely without assuming a specific method exists
+$currentUserId = null;
+if (method_exists($user, 'getId')) {
+    $currentUserId = $user->getId();
+} elseif (method_exists($user, 'getUserId')) {
+    $currentUserId = $user->getUserId();
+} elseif (method_exists($user, 'getUser')) {
+    $u = $user->getUser();
+    if (is_array($u) && isset($u['id'])) {
+        $currentUserId = $u['id'];
+    } elseif (is_object($u) && isset($u->id)) {
+        $currentUserId = $u->id;
+    }
+} elseif (isset($_SESSION['user_id'])) {
+    $currentUserId = (int) $_SESSION['user_id'];
+}
+
+if (!$order || $currentUserId === null || $order['user_id'] != $currentUserId) {
+    $_SESSION['error'] = "Order not found or access denied.";
     header("Location: " . SITE_URL . "public/index.php");
     exit;
 }
 
 // Get order items
-$order_items = $orderObj->getOrderItems($order_id);
+$items = $orderObj->getOrderItems($order_id);
 ?>
 
-<!-- Order Confirmation Section -->
-<section class="section">
-    <div class="container">
-        <div class="order-confirmation">
-            <?php if (isset($_SESSION['success'])): ?>
-                <div class="alert alert-success">
-                    <?php 
-                    echo $_SESSION['success'];
-                    unset($_SESSION['success']);
-                    ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - FJersey</title>
+    <link rel="stylesheet" href="<?php echo SITE_URL; ?>assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <?php include '../includes/header.php'; ?>
+
+    <!-- Order Confirmation Section -->
+    <section class="section">
+        <div class="container">
+            <div class="order-confirmation">
+                <div class="confirmation-header">
+                    <i class="fas fa-check-circle" style="font-size: 48px; color: #28a745;"></i>
+                    <h1>Thank You for Your Order!</h1>
+                    <p>Your order has been placed successfully.</p>
                 </div>
-            <?php endif; ?>
-            
-            <div class="confirmation-header">
-                <h1>Order Confirmation</h1>
-                <p>Thank you for your order! Your order has been received and is being processed.</p>
-            </div>
-            
-            <div class="order-details">
-                <div class="order-info">
-                    <h2>Order Information</h2>
-                    <p><strong>Order Number:</strong> #<?php echo $order_id; ?></p>
-                    <p><strong>Order Date:</strong> <?php echo date('F j, Y', strtotime($order['created_at'])); ?></p>
-                    <p><strong>Payment Method:</strong> <?php echo ucfirst($order['payment_method']); ?></p>
-                    <p><strong>Payment Status:</strong> <?php echo ucfirst($order['status']); ?></p>
-                    <?php if ($order['payment_id']): ?>
-                        <p><strong>Payment ID:</strong> <?php echo $order['payment_id']; ?></p>
+                
+                <div class="order-details">
+                    <h2>Order Details</h2>
+                    <div class="detail-row">
+                        <span>Order Number:</span>
+                        <span>#<?php echo htmlspecialchars($order['id']); ?></span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Order Date:</span>
+                        <span><?php echo date('F j, Y', strtotime($order['created_at'])); ?></span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Payment Status:</span>
+                        <span><?php echo ucfirst($order['status']); ?></span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Payment ID:</span>
+                        <span><?php echo htmlspecialchars($order['payment_id']); ?></span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Shipping Name:</span>
+                        <span><?php echo htmlspecialchars(isset($order['shipping_name']) ? $order['shipping_name'] : (isset($order['shipping_address']) ? '' : '')); ?></span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Shipping Phone:</span>
+                        <span><?php echo htmlspecialchars(isset($order['shipping_phone']) ? $order['shipping_phone'] : ''); ?></span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Shipping Address:</span>
+                        <span>
+                            <?php 
+                            $sa = isset($order['shipping_address']) ? $order['shipping_address'] : '';
+                            $sc = isset($order['shipping_city']) ? $order['shipping_city'] : '';
+                            $sst = isset($order['shipping_state']) ? $order['shipping_state'] : '';
+                            $sp = isset($order['shipping_pincode']) ? $order['shipping_pincode'] : '';
+                            $parts = array_filter([$sa, $sc, $sst]);
+                            echo htmlspecialchars(implode(', ', $parts) . ($sp ? ' - ' . $sp : ''));
+                            ?>
+                        </span>
+                    </div>
+                    <div class="detail-row total">
+                        <span>Order Total:</span>
+                        <span>₹<?php echo number_format($order['total_amount'], 2); ?></span>
+                    </div>
+                </div>
+                
+                <div class="order-items">
+                    <h2>Order Items</h2>
+                    <?php if (!empty($items)): ?>
+                        <?php foreach ($items as $item): ?>
+                            <div class="order-item">
+                                <div class="item-details">
+                                    <h4><?php echo htmlspecialchars($item['product_name']); ?></h4>
+                                    <p>Size: <?php echo htmlspecialchars($item['size']); ?></p>
+                                    <p>Quantity: <?php echo htmlspecialchars($item['quantity']); ?></p>
+                                    <p>Price: ₹<?php echo number_format($item['price'], 2); ?></p>
+                                </div>
+                                <div class="item-total">
+                                    ₹<?php echo number_format($item['price'] * $item['quantity'], 2); ?>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>No items found in this order.</p>
                     <?php endif; ?>
                 </div>
                 
-                <div class="shipping-info">
-                    <h2>Shipping Information</h2>
-                    <p><?php echo nl2br(htmlspecialchars($order['shipping_address'])); ?></p>
+                <div class="confirmation-actions">
+                    <a href="<?php echo SITE_URL; ?>public/shop.php" class="btn btn-primary">Continue Shopping</a>
+                    <?php if ($order['status'] === 'paid'): ?>
+                        <button onclick="window.print()" class="btn btn-secondary">Print Order</button>
+                    <?php endif; ?>
                 </div>
-            </div>
-            
-            <div class="order-summary">
-                <h2>Order Summary</h2>
-                <div class="order-items">
-                    <?php foreach ($order_items as $item): ?>
-                        <div class="order-item">
-                            <div class="item-info">
-                                <img src="<?php echo SITE_URL; ?>uploads/<?php echo $item['image']; ?>" alt="<?php echo $item['name']; ?>">
-                                <div>
-                                    <h4><?php echo $item['name']; ?></h4>
-                                    <p>Size: <?php echo $item['size']; ?> | Qty: <?php echo $item['quantity']; ?></p>
-                                </div>
-                            </div>
-                            <div class="item-price">
-                                $<?php echo number_format($item['price'] * $item['quantity'], 2); ?>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-                
-                <div class="order-totals">
-                    <div class="total-row">
-                        <span>Subtotal</span>
-                        <span>$<?php echo number_format($order['total_amount'] - 10.00, 2); ?></span>
-                    </div>
-                    <div class="total-row">
-                        <span>Shipping</span>
-                        <span>$<?php echo number_format(10.00, 2); ?></span>
-                    </div>
-                    <div class="total-row grand-total">
-                        <span>Total</span>
-                        <span>$<?php echo number_format($order['total_amount'], 2); ?></span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="order-actions">
-                <a href="<?php echo SITE_URL; ?>public/shop.php" class="btn btn-primary">Continue Shopping</a>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<?php require_once '../includes/footer.php'; ?>
-ALTER TABLE orders
-ADD COLUMN payment_id VARCHAR(255) NULL AFTER payment_method,
-ADD COLUMN razorpay_order_id VARCHAR(255) NULL AFTER payment_id;
+    <?php include '../includes/footer.php'; ?>
+</body>
+</html>

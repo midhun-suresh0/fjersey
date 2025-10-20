@@ -19,7 +19,9 @@ define('UPLOAD_DIR', $_SERVER['DOCUMENT_ROOT'] . '/fjersey/uploads/');
 define('UPLOAD_URL', SITE_URL . 'uploads/');
 
 // Session configuration
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Error reporting
 error_reporting(E_ALL);

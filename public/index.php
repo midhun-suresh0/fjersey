@@ -19,89 +19,31 @@ $featured_products = $product->getFeatured(8);
     </div>
 </section>
 
-<style>
-    /* Add this to existing styles */
-    .product-img.no-image {
-        background: linear-gradient(45deg, #f1f1f1 25%, #e9e9e9 25%, #e9e9e9 50%, #f1f1f1 50%, #f1f1f1 75%, #e9e9e9 75%, #e9e9e9 100%);
-        background-size: 20px 20px;
-    }
-    
-    .product-img.no-image::after {
-        content: 'No Image';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: #666;
-        font-size: 0.9em;
-    }
-</style>
-
 <!-- Featured Products -->
 <section class="section">
     <div class="container">
-        <h2 class="section-title">Featured Products</h2>
-        <div class="products">
-            <?php foreach ($featured_products as $item): ?>
-                <div class="product-card">
-                    <?php if (!empty($item['image']) && file_exists('../uploads/' . $item['image'])): ?>
-                        <div class="product-img">
-                            <img src="<?php echo SITE_URL; ?>uploads/<?php echo $item['image']; ?>" 
-                                 alt="<?php echo htmlspecialchars($item['name']); ?>">
-                        </div>
-                    <?php else: ?>
-                        <div class="product-img no-image"></div>
-                    <?php endif; ?>
-                    <div class="product-info">
-                        <h3 class="product-title"><?php echo htmlspecialchars($item['name']); ?></h3>
-                        <p class="product-team"><?php echo htmlspecialchars($item['team']); ?></p>
-                        <p class="product-price">$<?php echo number_format($item['price'], 2); ?></p>
-                        <div class="product-actions">
-                            <a href="<?php echo SITE_URL; ?>public/product_detail.php?id=<?php echo $item['id']; ?>" 
-                               class="btn btn-sm">View Details</a>
-                            <form action="<?php echo SITE_URL; ?>public/cart_actions.php" method="POST" style="flex: 1;">
-                                <input type="hidden" name="action" value="add">
-                                <input type="hidden" name="product_id" value="<?php echo $item['id']; ?>">
-                                <input type="hidden" name="quantity" value="1">
-                                <input type="hidden" name="size" value="M">
-                                <button type="submit" class="btn btn-sm btn-primary" style="width: 100%;">Add to Cart</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
+        <div class="section-title">
+            <h2>Featured Jerseys</h2>
         </div>
-    </div>
-</section>
-
-<!-- Latest Products -->
-<section class="section" style="background-color: #f8f9fa;">
-    <div class="container">
-        <h2 class="section-title">Latest Products</h2>
+        
         <div class="products">
-            <?php foreach ($latest_products as $item): ?>
+            <?php foreach ($featured_products as $product): ?>
                 <div class="product-card">
-                    <?php if (!empty($item['image']) && file_exists('../uploads/' . $item['image'])): ?>
-                        <div class="product-img">
-                            <img src="<?php echo SITE_URL; ?>uploads/<?php echo $item['image']; ?>" 
-                                 alt="<?php echo htmlspecialchars($item['name']); ?>">
-                        </div>
-                    <?php else: ?>
-                        <div class="product-img no-image"></div>
-                    <?php endif; ?>
+                    <div class="product-img">
+                        <img src="<?php echo SITE_URL; ?>uploads/<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>">
+                    </div>
                     <div class="product-info">
-                        <h3 class="product-title"><?php echo htmlspecialchars($item['name']); ?></h3>
-                        <p class="product-team"><?php echo htmlspecialchars($item['team']); ?></p>
-                        <p class="product-price">$<?php echo number_format($item['price'], 2); ?></p>
+                        <h3 class="product-title"><?php echo $product['name']; ?></h3>
+                        <p class="product-team"><?php echo $product['team']; ?></p>
+                        <p class="product-price">$<?php echo number_format($product['price'], 2); ?></p>
                         <div class="product-actions">
-                            <a href="<?php echo SITE_URL; ?>public/product_detail.php?id=<?php echo $item['id']; ?>" 
-                               class="btn btn-sm">View Details</a>
-                            <form action="<?php echo SITE_URL; ?>public/cart_actions.php" method="POST" style="flex: 1;">
+                            <a href="<?php echo SITE_URL; ?>public/product_detail.php?id=<?php echo $product['id']; ?>" class="btn btn-sm">View Details</a>
+                            <form action="<?php echo SITE_URL; ?>public/cart_actions.php" method="POST">
                                 <input type="hidden" name="action" value="add">
-                                <input type="hidden" name="product_id" value="<?php echo $item['id']; ?>">
+                                <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
                                 <input type="hidden" name="quantity" value="1">
                                 <input type="hidden" name="size" value="M">
-                                <button type="submit" class="btn btn-sm btn-primary" style="width: 100%;">Add to Cart</button>
+                                <button type="submit" class="btn btn-sm">Add to Cart</button>
                             </form>
                         </div>
                     </div>

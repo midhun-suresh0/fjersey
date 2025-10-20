@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/Database.php';
+
 /**
  * User Class
  * Handles user registration, authentication, and profile management
@@ -172,17 +174,6 @@ class User {
     }
     
     /**
-     * Get current user's ID
-     * @return int|bool
-     */
-    public function getId() {
-        if (!$this->isLoggedIn()) {
-            return false;
-        }
-        return $_SESSION['user_id'];
-    }
-    
-    /**
      * Get current user's data
      * @return array|bool
      */
@@ -191,11 +182,23 @@ class User {
             return false;
         }
         
+        // Get additional user data from database
+        $stmt = $this->db->prepare("SELECT phone, address, city, state, pincode FROM users WHERE id = ?");
+        $stmt->bind_param("i", $_SESSION['user_id']);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $additional_data = $result->fetch_assoc();
+        
         return [
             'id' => $_SESSION['user_id'],
             'name' => $_SESSION['username'],
             'email' => $_SESSION['email'],
-            'role' => $_SESSION['role']
+            'role' => $_SESSION['role'],
+            'phone' => $additional_data['phone'] ?? '',
+            'address' => $additional_data['address'] ?? '',
+            'city' => $additional_data['city'] ?? '',
+            'state' => $additional_data['state'] ?? '',
+            'pincode' => $additional_data['pincode'] ?? ''
         ];
     }
     
@@ -223,6 +226,29 @@ class User {
         }
         
         return $users;
+    }
+    
+    /**
+     * Update user address
+     * @param array $data
+     * @return bool
+     */
+    public function updateAddress($data) {
+        if (!$this->isLoggedIn()) {
+            return false;
+        }
+        
+        $stmt = $this->db->prepare("UPDATE users SET phone = ?, address = ?, city = ?, state = ?, pincode = ? WHERE id = ?");
+        $stmt->bind_param("sssssi", 
+            $data['phone'],
+            $data['address'],
+            $data['city'],
+            $data['state'],
+            $data['pincode'],
+            $_SESSION['user_id']
+        );
+        
+        return $stmt->execute();
     }
 }
 ?>

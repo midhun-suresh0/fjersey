@@ -1,4 +1,7 @@
 <?php
+require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/Product.php';
+
 /**
  * Cart Class
  * Handles shopping cart operations

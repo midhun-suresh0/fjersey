@@ -64,53 +64,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Handle image upload
     $image_uploaded = false;
     if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-        $upload_dir = '../uploads/products/';
+        $upload_dir = '../uploads/';
         
         // Create directory if it doesn't exist
         if (!file_exists($upload_dir)) {
             mkdir($upload_dir, 0755, true);
         }
         
-        // Get file info
-        $file_info = pathinfo($_FILES['image']['name']);
-        $file_extension = strtolower($file_info['extension']);
+        $file_name = time() . '_' . basename($_FILES['image']['name']);
+        $target_file = $upload_dir . $file_name;
         
-        // Allowed file types
-        $allowed_types = ['jpg', 'jpeg', 'png', 'gif'];
-        
-        if (!in_array($file_extension, $allowed_types)) {
-            $_SESSION['error'] = "Only JPG, JPEG, PNG & GIF files are allowed.";
-        } else {
-            // Generate unique filename
-            $file_name = time() . '_' . uniqid() . '.' . $file_extension;
-            $target_file = $upload_dir . $file_name;
-            
-            // Check file size (max 5MB)
-            if ($_FILES['image']['size'] > 5000000) {
-                $_SESSION['error'] = "Sorry, your file is too large. Maximum size is 5MB.";
+        // Check if image file is a actual image
+        $check = getimagesize($_FILES['image']['tmp_name']);
+        if ($check !== false) {
+            // Try to upload file
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $target_file)) {
+                $product_data['image'] = $file_name;
+                $image_uploaded = true;
             } else {
-                // Check if image file is a actual image
-                $check = getimagesize($_FILES['image']['tmp_name']);
-                if ($check !== false) {
-                    // Try to upload file
-                    if (move_uploaded_file($_FILES['image']['tmp_name'], $target_file)) {
-                        $product_data['image'] = 'products/' . $file_name;
-                        $image_uploaded = true;
-                        
-                        // Delete old image if updating
-                        if ($editing && !empty($existing_product['image'])) {
-                            $old_image = '../uploads/' . $existing_product['image'];
-                            if (file_exists($old_image)) {
-                                unlink($old_image);
-                            }
-                        }
-                    } else {
-                        $_SESSION['error'] = "Sorry, there was an error uploading your file.";
-                    }
-                } else {
-                    $_SESSION['error'] = "File is not an image.";
-                }
+                $_SESSION['error'] = "Sorry, there was an error uploading your file.";
             }
+        } else {
+            $_SESSION['error'] = "File is not an image.";
         }
     }
     

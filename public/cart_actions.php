@@ -44,7 +44,7 @@ switch ($action) {
         }
         
         // Add to cart
-        $cart->addItem($product_id, $quantity, $size);
+        $cart->add($product_id, $quantity, $size);
         $_SESSION['success'] = "Product added to cart";
         
         // Redirect back to product page or referrer
@@ -64,7 +64,7 @@ switch ($action) {
         $quantity = (int)$_POST['quantity'];
         
         // Update cart item
-        $cart->updateItem($cart_id, $quantity);
+        $cart->update($cart_id, $quantity);
         $_SESSION['success'] = "Cart updated";
         header("Location: " . SITE_URL . "public/cart.php");
         break;
@@ -80,7 +80,7 @@ switch ($action) {
         $cart_id = (int)$_POST['cart_id'];
         
         // Remove item from cart
-        $cart->removeItem($cart_id);
+        $cart->remove($cart_id);
         $_SESSION['success'] = "Item removed from cart";
         header("Location: " . SITE_URL . "public/cart.php");
         break;
