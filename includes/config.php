@@ -12,7 +12,7 @@ define('DB_NAME', 'fjersey_db');
 
 // Website configuration
 define('SITE_NAME', 'Football Jersey Store');
-define('SITE_URL', 'http://localhost/fjersey/');
+define('SITE_URL', '/fjersey/');
 
 // File upload paths
 define('UPLOAD_DIR', $_SERVER['DOCUMENT_ROOT'] . '/fjersey/uploads/');
