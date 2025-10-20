@@ -179,10 +179,10 @@ $page_title = "Order #" . $order_id . " Details";
                                     <tr>
                                         <td class="product-cell">
                                             <div class="product-info">
-                                                <img src="<?php echo SITE_URL; ?>uploads/<?php echo $item['image']; ?>" alt="<?php echo $item['name']; ?>">
+                                                <img src="<?php echo SITE_URL; ?>uploads/<?php echo $item['image']; ?>" alt="<?php echo isset($item['product_name']) ? $item['product_name'] : ''; ?>">
                                                 <div>
-                                                    <h4><?php echo htmlspecialchars($item['name']); ?></h4>
-                                                    <p><?php echo htmlspecialchars($item['team']); ?> - <?php echo htmlspecialchars($item['category']); ?></p>
+                                                    <h4><?php echo htmlspecialchars(isset($item['product_name']) ? $item['product_name'] : ($item['name'] ?? '')); ?></h4>
+                                                    <p><?php echo htmlspecialchars(isset($item['product_team']) ? $item['product_team'] : ($item['team'] ?? '')); ?> - <?php echo htmlspecialchars(isset($item['product_category']) ? $item['product_category'] : ($item['category'] ?? '')); ?></p>
                                                 </div>
                                             </div>
                                         </td>

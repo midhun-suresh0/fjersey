@@ -37,29 +37,39 @@ $productObj = new Product();
                             foreach ($items as $item): 
                                 $product = $productObj->getById($item['product_id']);
                                 if (!$product) continue;
+
+                                // Defensive defaults
+                                $prod_image = isset($product['image']) ? $product['image'] : '';
+                                $prod_name = isset($product['name']) ? $product['name'] : 'Product';
+                                $prod_team = isset($product['team']) ? $product['team'] : '';
+                                $prod_price = isset($product['price']) ? (float)$product['price'] : 0.0;
+                                $prod_stock = isset($product['stock']) ? (int)$product['stock'] : 0;
+                                $item_size = isset($item['size']) ? $item['size'] : '';
+                                $item_qty = isset($item['quantity']) ? (int)$item['quantity'] : 1;
+                                $item_id = isset($item['id']) ? $item['id'] : 0;
                             ?>
                                 <tr>
                                     <td class="cart-product">
-                                        <img src="<?php echo SITE_URL; ?>uploads/<?php echo $product['image']; ?>" alt="<?php echo $product['name']; ?>">
+                                        <img src="<?php echo SITE_URL; ?>uploads/<?php echo htmlspecialchars($prod_image); ?>" alt="<?php echo htmlspecialchars($prod_name); ?>">
                                         <div>
-                                            <h4><?php echo $product['name']; ?></h4>
-                                            <p><?php echo $product['team']; ?></p>
+                                            <h4><?php echo htmlspecialchars($prod_name); ?></h4>
+                                            <p><?php echo htmlspecialchars($prod_team); ?></p>
                                         </div>
                                     </td>
-                                    <td><?php echo $item['size']; ?></td>
-                                    <td>$<?php echo number_format($product['price'], 2); ?></td>
+                                    <td><?php echo htmlspecialchars($item_size); ?></td>
+                                    <td>$<?php echo number_format($prod_price, 2); ?></td>
                                     <td>
                                         <form action="<?php echo SITE_URL; ?>public/cart_actions.php" method="POST" class="quantity-form">
                                             <input type="hidden" name="action" value="update">
-                                            <input type="hidden" name="cart_id" value="<?php echo $item['id']; ?>">
-                                            <input type="number" name="quantity" value="<?php echo $item['quantity']; ?>" min="1" max="<?php echo $product['stock']; ?>" onchange="this.form.submit()">
+                                            <input type="hidden" name="cart_id" value="<?php echo $item_id; ?>">
+                                            <input type="number" name="quantity" value="<?php echo $item_qty; ?>" min="1" max="<?php echo $prod_stock; ?>" onchange="this.form.submit()">
                                         </form>
                                     </td>
-                                    <td>$<?php echo number_format($product['price'] * $item['quantity'], 2); ?></td>
+                                    <td>$<?php echo number_format($prod_price * $item_qty, 2); ?></td>
                                     <td>
                                         <form action="<?php echo SITE_URL; ?>public/cart_actions.php" method="POST">
                                             <input type="hidden" name="action" value="remove">
-                                            <input type="hidden" name="cart_id" value="<?php echo $item['id']; ?>">
+                                            <input type="hidden" name="cart_id" value="<?php echo $item_id; ?>">
                                             <button type="submit" class="btn-remove">Remove</button>
                                         </form>
                                     </td>

@@ -114,7 +114,7 @@ $products = $product->getAll();
                                                 </span>
                                             </td>
                                             <td>
-                                                <?php echo $item['featured'] ? '<i class="fas fa-check" style="color: green;"></i>' : '<i class="fas fa-times" style="color: red;"></i>'; ?>
+                                                <?php echo (isset($item['featured']) && $item['featured']) ? '<i class="fas fa-check" style="color: green;"></i>' : '<i class="fas fa-times" style="color: red;"></i>'; ?>
                                             </td>
                                             <td>
                                                 <div class="action-buttons">

@@ -20,17 +20,19 @@ class Product {
      * @return bool
      */
     public function create($data, $image) {
-        $name = $data['name'];
-        $description = $data['description'];
-        $price = $data['price'];
-        $category = $data['category'];
-        $team = $data['team'];
-        $size = $data['size'];
-        $stock = $data['stock'];
+        // Defensive retrieval with defaults to avoid undefined index notices
+        $name = isset($data['name']) ? $data['name'] : '';
+        $description = isset($data['description']) ? $data['description'] : '';
+        $price = isset($data['price']) ? (float)$data['price'] : 0.0;
+        $category = isset($data['category']) ? $data['category'] : '';
+        $team = isset($data['team']) ? $data['team'] : '';
+        $size = isset($data['size']) ? $data['size'] : '';
+        $stock = isset($data['stock']) ? (int)$data['stock'] : 0;
         
         $stmt = $this->db->prepare("INSERT INTO products (name, description, price, category, team, size, stock, image) 
                                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssdsssss", $name, $description, $price, $category, $team, $size, $stock, $image);
+    // Use correct types: s=string, d=double, i=int
+    $stmt->bind_param("ssdsssis", $name, $description, $price, $category, $team, $size, $stock, $image);
         
         if ($stmt->execute()) {
             return true;
@@ -93,13 +95,14 @@ class Product {
      * @return bool
      */
     public function update($id, $data, $image = null) {
-        $name = $data['name'];
-        $description = $data['description'];
-        $price = $data['price'];
-        $category = $data['category'];
-        $team = $data['team'];
-        $size = $data['size'];
-        $stock = $data['stock'];
+        // Defensive retrieval with defaults
+        $name = isset($data['name']) ? $data['name'] : '';
+        $description = isset($data['description']) ? $data['description'] : '';
+        $price = isset($data['price']) ? (float)$data['price'] : 0.0;
+        $category = isset($data['category']) ? $data['category'] : '';
+        $team = isset($data['team']) ? $data['team'] : '';
+        $size = isset($data['size']) ? $data['size'] : '';
+        $stock = isset($data['stock']) ? (int)$data['stock'] : 0;
         
         if ($image) {
             $stmt = $this->db->prepare("UPDATE products SET name = ?, description = ?, price = ?, 

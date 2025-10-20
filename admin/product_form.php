@@ -97,14 +97,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Add or update product
     if ($editing) {
         $product_data['id'] = $product_id;
-        $result = $product->update($product_data);
+        // If a new image was uploaded, pass it; otherwise let update() keep existing image
+        $image_param = $image_uploaded ? $product_data['image'] : null;
+        $result = $product->update($product_id, $product_data, $image_param);
         $message = "Product updated successfully";
     } else {
         // New product must have an image
         if (!$image_uploaded) {
             $_SESSION['error'] = "Please upload an image for the product.";
         } else {
-            $result = $product->create($product_data);
+            $result = $product->create($product_data, $product_data['image']);
             $message = "Product added successfully";
         }
     }

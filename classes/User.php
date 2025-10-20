@@ -227,6 +227,22 @@ class User {
         
         return $users;
     }
+
+    /**
+     * Get all users (admin view) - compatible with admin/users.php
+     * @return array
+     */
+    public function getAll() {
+        $result = $this->db->query("SELECT id, username AS name, email, role, created_at FROM users ORDER BY created_at DESC");
+        $users = array();
+
+        while ($row = $result->fetch_assoc()) {
+            $row['is_admin'] = isset($row['role']) && $row['role'] === 'admin' ? 1 : 0;
+            $users[] = $row;
+        }
+
+        return $users;
+    }
     
     /**
      * Update user address

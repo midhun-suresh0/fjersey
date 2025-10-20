@@ -23,22 +23,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($email) || empty($password)) {
         $error = "Please enter both email and password";
     } else {
-        $login_result = $user->login($email, $password);
-        
-        if ($login_result && $user->isAdmin()) {
+        // Use Admin::login to authenticate admin users only
+        $login_result = $admin->login($email, $password);
+
+        if ($login_result) {
             // Redirect to admin dashboard
             header("Location: dashboard.php");
             exit;
         } else {
-            // Either login failed or user is not an admin
-            if ($login_result) {
-                // User logged in but not an admin
-                $error = "You do not have admin privileges";
-                // Log them out
-                session_destroy();
-            } else {
-                $error = "Invalid email or password";
-            }
+            $error = "Invalid admin credentials";
         }
     }
 }

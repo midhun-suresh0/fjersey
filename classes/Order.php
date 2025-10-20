@@ -127,7 +127,7 @@ class Order {
      * @return array|bool
      */
     public function getById($id) {
-        $stmt = $this->db->prepare("SELECT * FROM orders WHERE id = ?");
+    $stmt = $this->db->prepare("SELECT o.*, o.created_at AS order_date FROM orders o WHERE id = ?");
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -151,7 +151,7 @@ class Order {
      */
     public function getOrderItems($order_id) {
         $stmt = $this->db->prepare(
-            "SELECT oi.*, p.image, p.name AS product_name
+            "SELECT oi.*, p.image, p.name AS product_name, p.team AS product_team, p.category AS product_category
              FROM order_items oi 
              LEFT JOIN products p ON oi.product_id = p.id 
              WHERE oi.order_id = ?"
@@ -204,6 +204,26 @@ class Order {
             $orders[] = $row;
         }
         
+        return $orders;
+    }
+
+    /**
+     * Get all orders with user info for admin listing
+     * @return array
+     */
+    public function getAllWithUserInfo() {
+        $result = $this->db->query(
+            "SELECT o.id, o.total_amount, o.status, o.payment_method, o.created_at AS order_date, u.username AS user_name
+             FROM orders o
+             JOIN users u ON o.user_id = u.id
+             ORDER BY o.created_at DESC"
+        );
+
+        $orders = array();
+        while ($row = $result->fetch_assoc()) {
+            $orders[] = $row;
+        }
+
         return $orders;
     }
     
