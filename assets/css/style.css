@@ -13,8 +13,9 @@
 body {
     margin: 0;
     padding: 0;
-    background: url('../images/jersey_wall.jpg') no-repeat center center fixed;
-    background-size: cover;
+    /* Use absolute path so the image loads regardless of CSS file resolution in the browser */
+    /* Use a plain white background */
+    background-color: #ffffff;
     font-family: 'Poppins', sans-serif;
     line-height: 1.6;
     color: #333;
@@ -161,9 +162,8 @@ nav {
 
 /* Hero Section */
 .hero {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../images/hero-bg.jpg');
-    background-size: cover;
-    background-position: center;
+    /* Use a semi-transparent overlay so the body background image shows through */
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
     height: 500px;
     display: flex;
     align-items: center;
