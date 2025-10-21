@@ -98,7 +98,7 @@ $page_title = "Order #" . $order_id . " Details";
                             </div>
                             <div class="info-group">
                                 <div class="info-label">Total Amount:</div>
-                                <div class="info-value">$<?php echo number_format($order_details['total_amount'], 2); ?></div>
+                                <div class="info-value">₹<?php echo number_format($order_details['total_amount'], 2); ?></div>
                             </div>
                         </div>
                     </div>
@@ -187,16 +187,16 @@ $page_title = "Order #" . $order_id . " Details";
                                             </div>
                                         </td>
                                         <td><?php echo $item['size']; ?></td>
-                                        <td>$<?php echo number_format($item['price'], 2); ?></td>
+                                        <td>₹<?php echo number_format($item['price'], 2); ?></td>
                                         <td><?php echo $item['quantity']; ?></td>
-                                        <td>$<?php echo number_format($item['price'] * $item['quantity'], 2); ?></td>
+                                        <td>₹<?php echo number_format($item['price'] * $item['quantity'], 2); ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="4" class="text-right"><strong>Subtotal:</strong></td>
-                                    <td>$<?php echo number_format($order_details['total_amount'] - 10, 2); ?></td>
+                                    <td>₹<?php echo number_format($order_details['total_amount'] - 10, 2); ?></td>
                                 </tr>
                                 <tr>
                                     <td colspan="4" class="text-right"><strong>Shipping:</strong></td>
@@ -204,7 +204,7 @@ $page_title = "Order #" . $order_id . " Details";
                                 </tr>
                                 <tr>
                                     <td colspan="4" class="text-right"><strong>Total:</strong></td>
-                                    <td>$<?php echo number_format($order_details['total_amount'], 2); ?></td>
+                                    <td>₹<?php echo number_format($order_details['total_amount'], 2); ?></td>
                                 </tr>
                             </tfoot>
                         </table>

@@ -100,7 +100,7 @@ $orders = $order->getAllWithUserInfo();
                                             <td>#<?php echo $item['id']; ?></td>
                                             <td><?php echo htmlspecialchars($item['user_name']); ?></td>
                                             <td><?php echo date('M d, Y', strtotime($item['order_date'])); ?></td>
-                                            <td>$<?php echo number_format($item['total_amount'], 2); ?></td>
+                                            <td>₹<?php echo number_format($item['total_amount'], 2); ?></td>
                                             <td>
                                                 <span class="status-badge status-<?php echo strtolower($item['status']); ?>">
                                                     <?php echo $item['status']; ?>

@@ -107,7 +107,7 @@ $products = $product->getAll();
                                             <td><?php echo $item['name']; ?></td>
                                             <td><?php echo $item['team']; ?></td>
                                             <td><?php echo $item['category']; ?></td>
-                                            <td>$<?php echo number_format($item['price'], 2); ?></td>
+                                            <td>₹<?php echo number_format($item['price'], 2); ?></td>
                                             <td>
                                                 <span class="stock-badge <?php echo $item['stock'] <= 5 ? 'stock-low' : ($item['stock'] <= 10 ? 'stock-medium' : ''); ?>">
                                                     <?php echo $item['stock']; ?>

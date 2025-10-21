@@ -35,7 +35,7 @@ $page_title = $product_data['name'];
                 <div class="product-detail-info">
                     <h1><?php echo $product_data['name']; ?></h1>
                     <p class="product-team"><?php echo $product_data['team']; ?> | <?php echo $product_data['category']; ?></p>
-                    <div class="product-price">$<?php echo number_format($product_data['price'], 2); ?></div>
+                    <div class="product-price">₹<?php echo number_format($product_data['price'], 2); ?></div>
                     
                     <div class="product-description">
                         <p><?php echo $product_data['description']; ?></p>
@@ -91,7 +91,7 @@ $page_title = $product_data['name'];
                     <div class="product-info">
                         <h3 class="product-title"><?php echo $item['name']; ?></h3>
                         <p class="product-team"><?php echo $item['team']; ?></p>
-                        <p class="product-price">$<?php echo number_format($item['price'], 2); ?></p>
+                        <p class="product-price">₹<?php echo number_format($item['price'], 2); ?></p>
                         <div class="product-actions">
                             <a href="<?php echo SITE_URL; ?>public/product_detail.php?id=<?php echo $item['id']; ?>" class="btn btn-sm">View Details</a>
                         </div>

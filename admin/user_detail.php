@@ -149,7 +149,7 @@ $page_title = "User Details: " . $user_details['name'];
                                         <tr>
                                             <td>#<?php echo $order['id']; ?></td>
                                             <td><?php echo date('M d, Y', strtotime($order['order_date'])); ?></td>
-                                            <td>$<?php echo number_format($order['total_amount'], 2); ?></td>
+                                            <td>₹<?php echo number_format($order['total_amount'], 2); ?></td>
                                             <td>
                                                 <span class="status-badge status-<?php echo strtolower($order['status']); ?>">
                                                     <?php echo $order['status']; ?>

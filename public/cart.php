@@ -57,7 +57,7 @@ $productObj = new Product();
                                         </div>
                                     </td>
                                     <td><?php echo htmlspecialchars($item_size); ?></td>
-                                    <td>$<?php echo number_format($prod_price, 2); ?></td>
+                                    <td>₹<?php echo number_format($prod_price, 2); ?></td>
                                     <td>
                                         <form action="<?php echo SITE_URL; ?>public/cart_actions.php" method="POST" class="quantity-form">
                                             <input type="hidden" name="action" value="update">
@@ -65,7 +65,7 @@ $productObj = new Product();
                                             <input type="number" name="quantity" value="<?php echo $item_qty; ?>" min="1" max="<?php echo $prod_stock; ?>" onchange="this.form.submit()">
                                         </form>
                                     </td>
-                                    <td>$<?php echo number_format($prod_price * $item_qty, 2); ?></td>
+                                    <td>₹<?php echo number_format($prod_price * $item_qty, 2); ?></td>
                                     <td>
                                         <form action="<?php echo SITE_URL; ?>public/cart_actions.php" method="POST">
                                             <input type="hidden" name="action" value="remove">
@@ -83,15 +83,15 @@ $productObj = new Product();
                     <h3>Order Summary</h3>
                     <div class="summary-item">
                         <span>Subtotal</span>
-                        <span>$<?php echo number_format($cart->getTotal(), 2); ?></span>
+                        <span>₹<?php echo number_format($cart->getTotal(), 2); ?></span>
                     </div>
                     <div class="summary-item">
                         <span>Shipping</span>
-                        <span>$<?php echo number_format(10.00, 2); ?></span>
+                        <span>₹<?php echo number_format(10.00, 2); ?></span>
                     </div>
                     <div class="summary-item total">
                         <span>Total</span>
-                        <span>$<?php echo number_format($cart->getTotal() + 10.00, 2); ?></span>
+                        <span>₹<?php echo number_format($cart->getTotal() + 10.00, 2); ?></span>
                     </div>
                     
                     <div class="cart-actions">

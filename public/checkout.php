@@ -121,7 +121,6 @@ $razorpay_order = $api->order->create($order_data);
                         <input type="text" id="pincode" name="pincode" value="<?php echo htmlspecialchars($user_details['pincode'] ?? ''); ?>" required>
                     </div>
                     
-                    <button type="submit" class="btn btn-primary" id="saveAddress">Save Address</button>
                 </form>
             </div>
             
@@ -133,7 +132,7 @@ $razorpay_order = $api->order->create($order_data);
                         $product_details = $product->getById($item['product_id']);
                     ?>
                         <div class="cart-item">
-                            <img src="<?php echo htmlspecialchars($product_details['image']); ?>" alt="<?php echo htmlspecialchars($product_details['name']); ?>">
+                            <img src="<?php echo SITE_URL; ?>uploads/<?php echo htmlspecialchars($product_details['image']); ?>" alt="<?php echo htmlspecialchars($product_details['name']); ?>">
                             <div class="item-details">
                                 <h3><?php echo htmlspecialchars($product_details['name']); ?></h3>
                                 <p>Size: <?php echo htmlspecialchars($item['size']); ?></p>

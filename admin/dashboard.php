@@ -86,7 +86,7 @@ $new_users = $admin->getNewUsers(5);
                         </div>
                         <div class="stat-info">
                             <h3>Total Sales</h3>
-                            <p>$<?php echo number_format($stats['total_sales'], 2); ?></p>
+                            <p>₹<?php echo number_format($stats['total_sales'], 2); ?></p>
                         </div>
                     </div>
                 </div>
@@ -155,7 +155,7 @@ $new_users = $admin->getNewUsers(5);
                                         <tr>
                                             <td>#<?php echo $order['id']; ?></td>
                                             <td><?php echo $order['customer_name']; ?></td>
-                                            <td>$<?php echo number_format($order['total_amount'], 2); ?></td>
+                                            <td>₹<?php echo number_format($order['total_amount'], 2); ?></td>
                                             <td>
                                                 <span class="status-badge status-<?php echo strtolower($order['status']); ?>">
                                                     <?php echo $order['status']; ?>

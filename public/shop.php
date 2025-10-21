@@ -178,7 +178,7 @@ if (!empty($search)) {
                                 <div class="product-info">
                                     <h3 class="product-title"><?php echo htmlspecialchars($item['name']); ?></h3>
                                     <p class="product-team"><?php echo htmlspecialchars($item['team']); ?></p>
-                                    <p class="product-price">$<?php echo number_format($item['price'], 2); ?></p>
+                                    <p class="product-price">₹<?php echo number_format($item['price'], 2); ?></p>
                                     <div class="product-actions">
                                         <a href="<?php echo SITE_URL; ?>public/product_detail.php?id=<?php echo $item['id']; ?>" class="btn btn-sm">View Details</a>
                                         <form action="<?php echo SITE_URL; ?>public/cart_actions.php" method="POST" style="flex: 1;">

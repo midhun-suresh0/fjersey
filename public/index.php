@@ -35,7 +35,7 @@ $featured_products = $product->getFeatured(8);
                     <div class="product-info">
                         <h3 class="product-title"><?php echo $product['name']; ?></h3>
                         <p class="product-team"><?php echo $product['team']; ?></p>
-                        <p class="product-price">$<?php echo number_format($product['price'], 2); ?></p>
+                        <p class="product-price">₹<?php echo number_format($product['price'], 2); ?></p>
                         <div class="product-actions">
                             <a href="<?php echo SITE_URL; ?>public/product_detail.php?id=<?php echo $product['id']; ?>" class="btn btn-sm">View Details</a>
                             <form action="<?php echo SITE_URL; ?>public/cart_actions.php" method="POST">

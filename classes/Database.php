@@ -6,7 +6,7 @@
 class Database {
     private $host = DB_HOST;
     private $user = DB_USER;
-    private $pass = "StrongPass!23";
+    private $pass = "";
     private $dbname = DB_NAME;
     
     private $conn;
